@@ -1,0 +1,52 @@
+{
+  "name": "visualizer",
+  "displayName": "Image Data Visualizer",
+  "description": "Visualize numpy/tensor/PIL data directly in VS Code.",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "main": "./out/extension.js",
+  "scripts": {
+    "compile": "tsc -p ./"
+  },
+  "contributes": {
+    "commands": [
+      {
+        "command": "visualize.debugVariable",
+        "title": "Visualize Data"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "visualize.debugVariable",
+          "group": "debug",
+          "when": "debugType == 'python' || debugType == 'debugpy'"
+        }
+      ],
+      "debug/variables/context": [
+        {
+          "command": "visualize.debugVariable",
+          "group": "navigation",
+          "when": "debugType == 'python' || debugType == 'debugpy'"
+        }
+      ],
+      "debug/watch/context": [
+        {
+          "command": "visualize.debugVariable",
+          "group": "navigation",
+          "when": "debugType == 'python' || debugType == 'debugpy'"
+        }
+      ]
+    }
+  },
+  "extensionDependencies": [
+    "ms-python.python"
+  ],
+  "devDependencies": {
+    "typescript": "^5.3.0",
+    "vscode": "^1.90.0", 
+    "@types/node": "^20.0.0"
+  }
+}

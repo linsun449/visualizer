@@ -1,0 +1,7 @@
+node_modules
+.vscode
+out
+*/__pycache__
+temp/data.b64
+temp/meta.json
+package-lock.json

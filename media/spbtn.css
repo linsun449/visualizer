@@ -1,0 +1,121 @@
+/* From Uiverse.io by vinodjangid07 */ 
+
+:root {
+  --spbtn-primary: #4285f4; /* 选中蓝色 */
+  --spbtn-gray: #9e9e9e;    /* 未选中灰色 */
+}
+
+#channelDrawerBtn {
+  display: none;
+}
+
+.channelDrawerBtnToggle {
+  position: relative;
+  width: 1.8em;
+  height: 2em;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4em;
+  transition-duration: .5s;
+}
+
+.channelDrawerBtnToggle:hover .bars {
+  background-color: var(--spbtn-primary);
+  transition-duration: .5s;
+}
+
+.bars {
+  width: 100%;
+  height: 0.2em;
+  background-color: var(--spbtn-gray);
+  border-radius: 0.2em;
+}
+
+
+#bar2 {
+  transition-duration: .5s;
+}
+
+#bar1,#bar3 {
+  width: 70%;
+}
+
+#channelDrawerBtn:checked + .channelDrawerBtnToggle .bars {
+  position: absolute;
+  transition-duration: .5s;
+  background-color: var(--spbtn-primary);
+}
+
+#channelDrawerBtn:checked + .channelDrawerBtnToggle #bar2 {
+  transform: scaleX(0);
+  transition-duration: .5s;
+}
+
+#channelDrawerBtn:checked + .channelDrawerBtnToggle #bar1 {
+  width: 100%;
+  transform: rotate(45deg);
+  transition-duration: .5s;
+}
+
+#channelDrawerBtn:checked + .channelDrawerBtnToggle #bar3 {
+  width: 100%;
+  transform: rotate(-45deg);
+  transition-duration: .5s;
+}
+
+#channelDrawerBtn:checked + .channelDrawerBtnToggle {
+  transition-duration: .5s;
+  transform: rotate(180deg);
+}
+
+/* 抽屉内容 */
+#channelDrawerContent {
+  background: var(--bg-dark);
+  border: 1px solid #444;
+  border-radius: 6px;
+  padding: 12px;
+  height: 384px;
+  width: 128px;
+  min-width: 128px;
+  overflow-y: auto;
+  display: none;
+  grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+  gap: 10px;
+  user-select: none;
+}
+#channelDrawerContent.open {
+  display: flex;
+  flex-direction: column;
+}
+
+#channelDrawerContent.hidden {
+  transform: translateX(100%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+#channelDrawerContent button {
+  background: #2a2a34;
+  border: 1px solid #444;
+  border-radius: 6px;
+  padding: 8px 0;
+  color: var(--text-primary);
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  width: 100%;
+  text-align: center;
+}
+#channelDrawerContent button:hover {
+  background-color: var(--accent);
+  color: white;
+}
+#channelDrawerContent button.selected {
+  background-color: var(--accent-light);
+  color: white;
+  font-weight: 700;
+  box-shadow: 0 0 6px var(--accent-light);
+}
