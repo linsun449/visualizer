@@ -1,15 +1,14 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
+import sharp from "sharp";
 
 export function activate(context: vscode.ExtensionContext) {
 
-  const disposable = vscode.commands.registerCommand('visualize.debugVariable', async (variableItem?: any) => {
+  const disposable_var = vscode.commands.registerCommand('visualize.debugVariable', async (variableItem?: any) => {
     let variableName: string | undefined;
 
-    if (variableItem) {
-      variableName = variableItem?.variable?.evaluateName;
-    }
+    if (variableItem) variableName = variableItem?.variable?.evaluateName;
 
     if (!variableName && vscode.window.activeTextEditor) {
       const editor = vscode.window.activeTextEditor;
@@ -25,7 +24,7 @@ export function activate(context: vscode.ExtensionContext) {
     }
 
     if (!variableName) {
-      vscode.window.showErrorMessage('Please select or right-click a variable.');
+      vscode.window.showErrorMessage('No variable selected.');
       return;
     }
 
@@ -44,9 +43,11 @@ export function activate(context: vscode.ExtensionContext) {
       const frameId = stackTrace.stackFrames?.[0]?.id;
       if (!frameId) throw new Error('No stack frame found');
 
+      const tempDir = path.join(context.extensionPath, 'temp');
+      if (!fs.existsSync(tempDir)) fs.mkdirSync(tempDir, { recursive: true });
       const pyScript = path.join(context.extensionPath, 'python');
-      const outputDataPath = path.join(context.extensionPath, 'temp', 'data.b64');
-      const outputMetaPath = path.join(context.extensionPath, 'temp', 'meta.json');
+      const outputDataPath = path.join(tempDir, 'data.b64');
+      const outputMetaPath = path.join(tempDir, 'meta.json');
      
       const expr = `
       __import__('sys').path.append(r"${pyScript}") or __import__('save_data').save(${variableName}, r"${outputDataPath}", r"${outputMetaPath}")
@@ -71,7 +72,25 @@ export function activate(context: vscode.ExtensionContext) {
     }
   });
 
-  context.subscriptions.push(disposable);
+  const disposable_img = vscode.commands.registerCommand("visualize.visualizeImage", async (uri: vscode.Uri) => {
+      if (!uri) {
+        vscode.window.showErrorMessage("No image selected.");
+        return;
+      }
+      const filePath = uri.fsPath;
+      try {
+        const image = await sharp(filePath);
+        const { data, info } = await image.raw().toBuffer({ resolveWithObject: true });
+        const { width, height, channels } = info;
+        const meta = {dtype: "uint8", shape: [height, width, channels]};
+        openViewer(context, data.toString("base64"), path.basename(filePath), meta);
+      } catch (err: any) {
+        vscode.window.showErrorMessage(`Failed to read image: ${err.message || err}`);
+      }
+    }
+  );
+  context.subscriptions.push(disposable_var);
+  context.subscriptions.push(disposable_img);
 }
 
 function openViewer(context: vscode.ExtensionContext, base64Data: string, variableName: string, meta:any) {

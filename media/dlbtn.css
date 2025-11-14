@@ -5,8 +5,8 @@
 }
 
 .Btn {
-  width: 2.2em;
-  height: 2.2em;
+  width: 1.5em;
+  height: 1.5em;
   background-color: transparent;
   border: transparent;
   display: flex; 
@@ -20,8 +20,8 @@
 
 .svgIcon {
   fill: var(--btn-gray);
-  width: 2.2em;
-  height: 2.2em;
+  width: 1.5em;
+  height: 1.5em;
 }
 
 .svgIcon:hover {

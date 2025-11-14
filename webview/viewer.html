@@ -8,7 +8,6 @@
   <link rel="stylesheet" href="dlbtn.css">
   <link rel="stylesheet" href="card.css">
   <style>
-    /* @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap'); */
 
     :root {
       --bg-dark: #121214;
@@ -684,15 +683,19 @@
         case 'uint16': imageDataArray = new Uint16Array(buffer); break;
         case 'uint8': imageDataArray = new Uint8Array(buffer); break;
         default:
-          document.getElementById('info-dtype').textContent = `error: ${dtype}`;
+          vscode.postMessage({ command: 'showError', text: `error: 不支持类型 ${dtype}`});
           return;
       }
       
       [height, width, channels] = shape || [];
       height = height ?? 1;
       width = width ?? 1;
-      channels = channels ?? 1;
-      
+      channels = channels ?? -1;
+      if (channels === -1 && imageDataArray.length % (height * width) != 0){
+          vscode.postMessage({ command: 'showError', text: `error: 通道错误`});
+          return;
+      }
+      channels = channels === -1? Math.floor(imageDataArray.length / (height * width)): channels;
       currentChannel = 0;
       populateChannelButtons(channels);
 
