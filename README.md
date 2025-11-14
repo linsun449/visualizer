@@ -59,7 +59,7 @@ npm install -g vsce
 vsce package
 # 生成的 .vsix 文件可通过 VS Code 扩展面板“从 VSIX 安装...”进行安装。
 ```
-```也支持直接从release下载vsix文件进行安装```：
+**手动安装**：直接从 [Release 页面](https://github.com/linsun449/visualizer/releases) 下载 `.vsix` 文件，然后在 VS Code 中通过“扩展”侧栏右上角的“···”菜单选择“从 VSIX 安装...”进行安装。
 
 ## 使用方法
 
