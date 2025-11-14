@@ -2,7 +2,7 @@
 
 ## 插件概述
 
-本插件用于在 VS Code 中可视化显示多维数组（如 NumPy 数组）或张量格式的图像数据，支持多通道浮点数据的显示与交互。适合调试和可视化分析图像数据、特征图、深度图等多通道图像格式数据。
+本插件用于在 VS Code 中可视化显示多维数组（如 NumPy 数组）或张量格式的图像数据、图像文件，支持多通道浮点数据的显示与交互。适合调试和可视化分析图像数据、特征图、深度图等多通道图像格式数据。
 
 ---
 
@@ -74,3 +74,8 @@ vsce package
 <img src="asset/input_in1.png" width="70%">
 
 <img src="asset/input_in2.png" width="70%">
+
+### 4.右击图像文件直接打开
+<img src="asset/file_in.png" width="70%">
+
+<img src="asset/title_in.png" width="70%">
