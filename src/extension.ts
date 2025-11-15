@@ -8,9 +8,18 @@ import decodeBmp from "decode-bmp";
 
 const tiff = require("tiff");
 const { PNG } = require("pngjs");
-
+let currentFrame: vscode.DebugStackFrame | undefined = undefined;
 
 export function activate(context: vscode.ExtensionContext) {
+
+  vscode.debug.onDidChangeActiveStackItem(stackItem => {
+      if (stackItem instanceof vscode.DebugStackFrame) currentFrame = stackItem;
+  });
+  vscode.debug.onDidTerminateDebugSession(() => {currentFrame = undefined;});
+  vscode.debug.onDidChangeBreakpoints(() => {});
+  vscode.debug.onDidReceiveDebugSessionCustomEvent(e => {
+      if (e.event === 'continued') currentFrame = undefined;
+  });
 
   const disposable_var = vscode.commands.registerCommand('visualize.debugVariable', async (variableItem?: any) => {
     let variableName: string | undefined;
@@ -42,12 +51,7 @@ export function activate(context: vscode.ExtensionContext) {
     }
 
     try {
-      const threads = await session.customRequest('threads');
-      const threadId = threads.threads?.[0]?.id;
-      if (!threadId) throw new Error('No threads found');
-
-      const stackTrace = await session.customRequest('stackTrace', { threadId, startFrame: 0, levels: 1 });
-      const frameId = stackTrace.stackFrames?.[0]?.id;
+      const frameId = currentFrame?.frameId;
       if (!frameId) throw new Error('No stack frame found');
 
       const tempDir = path.join(context.extensionPath, 'temp');
@@ -61,7 +65,7 @@ export function activate(context: vscode.ExtensionContext) {
       `
       const res = await session.customRequest('evaluate', {
         expression: expr,
-        frameId,
+        frameId: frameId,
         context: 'repl'});
 
       if (res?.result?.includes('OK')) {
