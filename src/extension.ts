@@ -9,6 +9,19 @@ import decodeBmp from "decode-bmp";
 const tiff = require("tiff");
 const { PNG } = require("pngjs");
 
+const activeViewers = new Map<string, {
+    watcher: vscode.FileSystemWatcher;
+    dispose: () => void;
+}>();
+
+function debounce<T extends (...args: any[]) => any>(func: T, delay: number) {
+    let timeout: NodeJS.Timeout | null = null;
+
+    return (...args: Parameters<T>) => {
+        if (timeout) clearTimeout(timeout);
+        timeout = setTimeout(() => func(...args), delay);
+    };
+}
 
 export function activate(context: vscode.ExtensionContext) {
 
@@ -85,10 +98,37 @@ export function activate(context: vscode.ExtensionContext) {
         return;
       }
       const filePath = uri.fsPath;
+      if (activeViewers.has(filePath)) {
+          activeViewers.get(filePath)?.dispose();
+          activeViewers.delete(filePath);
+      }
       try {
         const res = await loadImageBuffer(filePath);
         const meta = {dtype: "uint8", shape: [res.shape[0], res.shape[1], res.shape[2]]};
-        openViewer(context, res.data.toString("base64"), path.basename(filePath), meta);
+        const webview = openViewer(context, res.data.toString("base64"), path.basename(filePath), meta);
+
+        const watcher = vscode.workspace.createFileSystemWatcher(
+            new vscode.RelativePattern(path.dirname(filePath), path.basename(filePath))
+        );
+        const refreshViewer = debounce(async () => {
+            try {
+                const updatedRes = await loadImageBuffer(filePath);
+                webview.postMessage({type: 'refresh', data: updatedRes.data, 
+                  dtype: "uint8", shape:updatedRes.shape});
+            } catch (err: any) {
+                vscode.window.showErrorMessage(`Failed to refresh image: ${err.message || err}`);
+            }
+        }, 500);
+        const changeListener = watcher.onDidChange(refreshViewer);
+        const createListener = watcher.onDidCreate(refreshViewer);
+        activeViewers.set(filePath, {
+          watcher,
+          dispose: () => {
+              changeListener.dispose();
+              createListener.dispose();
+              watcher.dispose();
+          }
+        });
       } catch (err: any) {
         vscode.window.showErrorMessage(`Failed to read image: ${err.message || err}`);
       }
@@ -99,7 +139,7 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 export async function loadImageBuffer(path: string) {
-  const buffer = fs.readFileSync(path);
+  const buffer = await fs.promises.readFile(path);
 
   const info = imageType(buffer);
   const mime = info ? info.mime : "error";
@@ -161,25 +201,28 @@ function openViewer(context: vscode.ExtensionContext, base64Data: string, variab
   panel.webview.html = html;
 
   panel.webview.onDidReceiveMessage(message => {
-  switch (message.command) {
-    case 'showInfo':
-      vscode.window.showInformationMessage(message.text);
-      break;
-    case 'showError':
-      vscode.window.showErrorMessage(message.text);
-      break;
-    case 'ready':
-      panel.webview.postMessage({
-        type: 'payload',
-        data: base64Data,
-        variableName,  
-        meta: meta
-      });
-      break;
-  }
-});
-
+    switch (message.command) {
+      case 'showInfo':
+        vscode.window.showInformationMessage(message.text);
+        break;
+      case 'showError':
+        vscode.window.showErrorMessage(message.text);
+        break;
+      case 'ready':
+        panel.webview.postMessage({
+          type: 'payload',
+          data: base64Data,
+          variableName,  
+          meta: meta
+        });
+        break;
+    }
+  });
+  return panel.webview;
 }
 
 
-export function deactivate() {}
+export function deactivate() {
+  activeViewers.forEach(viewer => viewer.dispose());
+  activeViewers.clear();
+}
