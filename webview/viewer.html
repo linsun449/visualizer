@@ -434,6 +434,38 @@
     ctx.drawImage(offscreen, 0, 0); 
     ctx.restore();
   }
+
+  function drawImageByUrl(imgUrl) {
+    const img = new Image();
+    img.onload = () => {
+      
+      vscode.postMessage({ command: 'showInfo', text: `img.onload`});
+      canvas.width = CANVAS_CSS_SIZE;
+      canvas.height = CANVAS_CSS_SIZE;
+      canvas.style.width = `${CANVAS_CSS_SIZE}px`;
+      canvas.style.height = `${CANVAS_CSS_SIZE}px`;
+
+      ctx.save();
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      pixelScale = Math.min(CANVAS_CSS_SIZE / img.width, CANVAS_CSS_SIZE / img.height);
+      pixelScale = pixelScale = Math.min(Math.max(pixelScale, 0.2), 50);
+      offsetX = (CANVAS_CSS_SIZE - img.width * pixelScale) / 2;
+      offsetY = (CANVAS_CSS_SIZE - img.height * pixelScale) / 2;
+
+      ctx.setTransform(pixelScale, 0, 0, pixelScale, offsetX, offsetY);
+      ctx.imageSmoothingEnabled = false; 
+      ctx.drawImage(img, 0, 0);
+      ctx.restore();
+    };
+    img.onerror = (e) => {
+      console.error('Image load error:', e);
+      vscode.postMessage({ command: 'showInfo', text: `img.onerror triggered: ${e.message || e}` });
+    };
+    img.src = imgUrl;
+
+  }
+
   canvas.addEventListener('wheel', (e) => {
       if (e.ctrlKey) {
           e.preventDefault();
@@ -720,35 +752,7 @@
       document.getElementById('pro-normalization').textContent = 'false';
       document.getElementById('pro-colors').textContent = 'Grey';
       drawImage();
-    }else if (msg.type === 'refresh'){
-      const data = msg.data;
-      const dtype = msg.dtype;
-      const shapes = msg.shape;
-      vscode.postMessage({ command: 'showInfo', text: '刷新'});
-      if(!data || shapes[0] * shapes[1] * shapes[2] !== height * width * channels) {
-        vscode.postMessage({ command: 'showError', text: '刷新错误' + `${shapes[0]}, ${shapes[1]}, ${shapes[2]}` + `${height}, ${width}, ${channels}`});
-        return;
-      }
-      const raw = atob(data);
-      const buffer = new ArrayBuffer(raw.length);
-      const uint8View = new Uint8Array(buffer);
-      for(let i=0; i<raw.length; i++) {
-        uint8View[i] = raw.charCodeAt(i);
-      }
-      switch(dtype) {
-        case 'float32': imageDataArray = new Float32Array(buffer); break;
-        case 'float64': imageDataArray = new Float64Array(buffer); break;
-        case 'int32': imageDataArray = new Int32Array(buffer); break;
-        case 'int16': imageDataArray = new Int16Array(buffer); break;
-        case 'int8': imageDataArray = new Int8Array(buffer); break;
-        case 'uint16': imageDataArray = new Uint16Array(buffer); break;
-        case 'uint8': imageDataArray = new Uint8Array(buffer); break;
-        default:
-          vscode.postMessage({ command: 'showError', text: `error: 不支持类型 ${dtype}`});
-          return;
-      }
-      drawImage();
-    }
+    }else if (msg.type === 'refresh') drawImageByUrl(msg.url);
   });
 </script>
 <script id="worker-script" type="application/javascript">

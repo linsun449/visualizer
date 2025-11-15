@@ -112,9 +112,9 @@ export function activate(context: vscode.ExtensionContext) {
         );
         const refreshViewer = debounce(async () => {
             try {
-                const updatedRes = await loadImageBuffer(filePath);
-                webview.postMessage({type: 'refresh', data: updatedRes.data, 
-                  dtype: "uint8", shape:updatedRes.shape});
+              const buffer = await fs.promises.readFile(filePath);
+              webview.postMessage({type: 'refresh', 
+                  url: `data:image/png;base64,${buffer.toString('base64')}`});
             } catch (err: any) {
                 vscode.window.showErrorMessage(`Failed to refresh image: ${err.message || err}`);
             }
