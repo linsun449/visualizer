@@ -47,6 +47,7 @@ cd visualizer
 ```bash
 # 确保已安装 Node.js
 npm install
+npm install jpeg-js image-type decode-bmp tiff pngjs
 ```
 ### 3. 编译插件
 ```bash

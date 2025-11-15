@@ -1,6 +1,7 @@
-node_modules
 .vscode
 out
+node_modules
+dist
 */__pycache__
 temp/data.b64
 temp/meta.json

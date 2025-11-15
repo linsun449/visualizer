@@ -1,7 +1,14 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
-import sharp from "sharp";
+
+import jpeg from "jpeg-js";
+import imageType from 'image-type';
+import decodeBmp from "decode-bmp";
+
+const tiff = require("tiff");
+const { PNG } = require("pngjs");
+
 
 export function activate(context: vscode.ExtensionContext) {
 
@@ -79,11 +86,9 @@ export function activate(context: vscode.ExtensionContext) {
       }
       const filePath = uri.fsPath;
       try {
-        const image = await sharp(filePath);
-        const { data, info } = await image.raw().toBuffer({ resolveWithObject: true });
-        const { width, height, channels } = info;
-        const meta = {dtype: "uint8", shape: [height, width, channels]};
-        openViewer(context, data.toString("base64"), path.basename(filePath), meta);
+        const res = await loadImageBuffer(filePath);
+        const meta = {dtype: "uint8", shape: [res.shape[0], res.shape[1], res.shape[2]]};
+        openViewer(context, res.data.toString("base64"), path.basename(filePath), meta);
       } catch (err: any) {
         vscode.window.showErrorMessage(`Failed to read image: ${err.message || err}`);
       }
@@ -92,6 +97,43 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(disposable_var);
   context.subscriptions.push(disposable_img);
 }
+
+export async function loadImageBuffer(path: string) {
+  const buffer = fs.readFileSync(path);
+
+  const info = imageType(buffer);
+  const mime = info ? info.mime : "error";
+
+  if (mime === "image/jpeg" || /jpeg|jpg$/i.test(mime)) {
+    const decoded = jpeg.decode(buffer, { useTArray: true }) as {
+      width: number;
+      height: number;
+      data: Uint8Array;
+    };
+    return {data: Buffer.from(decoded.data), shape:[decoded.height, decoded.width, 4] };
+  }
+  if (mime === "image/png" || /png$/i.test(mime)) {
+    const png = PNG.sync.read(buffer);
+    return {data: Buffer.from(png.data), shape:[png.height, png.width, 4] };
+  }
+
+  if (mime.includes("tiff") || /tif|tiff$/i.test(mime)) {
+    const buffer = fs.readFileSync(path);
+    const ifds = tiff.decode(buffer);
+    const first = ifds[0];
+    if (!first) throw new Error("No TIFF image found");
+    const width = first.width as number;
+    const height = first.height as number;
+    return {data: Buffer.from(first.data), shape:[height, width, 4] };
+  }
+
+  if (mime === "image/bmp" || /bmp$/i.test(mime)) {
+    const bmpObj = decodeBmp(buffer);
+    return {data: Buffer.from(bmpObj.data), shape:[bmpObj.height, bmpObj.width, 4]};
+  }
+  throw new Error("Unsupported image format or unknown mime: " + mime);
+}
+
 
 function openViewer(context: vscode.ExtensionContext, base64Data: string, variableName: string, meta:any) {
   const panel = vscode.window.createWebviewPanel(
