@@ -81,11 +81,7 @@
     "url": "https://github.com/linsun449/visualizer.git"
   },
   "license": "Proprietary",
-  "galleryBanner": {
-    "color": "#007ACC",
-    "theme": "dark",
-    "image": "asset/banner.png"
-  },
+  "icon": "asset/banner.png",
   "dependencies": {
     "decode-bmp": "^0.2.1",
     "image-type": "^4.1.0",
