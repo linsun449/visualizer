@@ -647,7 +647,6 @@
     }
     else {
       // init
-      console.log(watchUrl.split(",")[0]);
       if (watchUrl) {
         setImageArrayFromUrl(watchUrl);
         watchUrl = null;
@@ -714,7 +713,10 @@
       document.getElementById('pro-channel').textContent = dimFormat;
     }else if (id === 'info-channel'){
       currentChannel = value;
-      if (value < 0) value = 'all';  
+      if (value < 0) {
+        value = 'all';
+        document.getElementById('pro-colors').textContent = `RGB`;
+      }
     }
     else if (id === 'pro-scale') pixelScale = value;
     else if (id === 'pro-offset-height') offsetY = value;
@@ -780,10 +782,6 @@
           return;
       }
       channels = !channels? Math.ceil(imageDataArray.length / (height * width)): channels;
-
-      setShowValue('info-shape', [height, width, channels]);
-      setShowValue('info-dtype', dtype);
-      setShowValue('info-channel', 0 - (channels === 3 || channels === 4));
       populateChannelButtons(channels);
         
       const blob = new Blob([document.querySelector('#worker-script').textContent], { type: 'application/javascript' });
@@ -802,6 +800,11 @@
       setShowValue('pro-channel', 'HWC');
       setShowValue('pro-normalization', 'false');
       setShowValue('pro-colors', 'Grey');
+
+      setShowValue('info-shape', [height, width, channels]);
+      setShowValue('info-dtype', dtype);
+      setShowValue('info-channel', 0 - (channels === 3 || channels === 4));
+
       drawImage();
     }else if (msg.type === 'refresh') {
       watchUrl = msg.url;
