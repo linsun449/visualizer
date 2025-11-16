@@ -14,7 +14,7 @@
     "onCommand: visualize.visualizeImage"
   ],
   "scripts": {
-    "compile": "tsc -p ./",
+    "compile": "npx tsc -p ./",
     "build": "node build.js",
     "package": "vsce package"
   },

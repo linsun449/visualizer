@@ -9,6 +9,7 @@ import decodeBmp from "decode-bmp";
 const tiff = require("tiff");
 const { PNG } = require("pngjs");
 
+let watchMode = false;
 const activeViewers = new Map<string, {
     watcher: vscode.FileSystemWatcher;
     dispose: () => void;
@@ -81,7 +82,8 @@ export function activate(context: vscode.ExtensionContext) {
         const content = fs.readFileSync(outputDataPath, 'utf-8');
         const metaStr = fs.readFileSync(outputMetaPath, 'utf-8');
         const meta = JSON.parse(metaStr);
-        openViewer(context, content, variableName, meta);
+        const webview = openViewer(context, content, variableName, meta);
+        webview.postMessage({type: 'disableWatch'});
       } else {
         vscode.window.showErrorMessage(`Failed: ${res?.result}`);
       }
@@ -111,6 +113,7 @@ export function activate(context: vscode.ExtensionContext) {
             new vscode.RelativePattern(path.dirname(filePath), path.basename(filePath))
         );
         const refreshViewer = debounce(async () => {
+          if (watchMode){
             try {
               const buffer = await fs.promises.readFile(filePath);
               webview.postMessage({type: 'refresh', 
@@ -118,6 +121,7 @@ export function activate(context: vscode.ExtensionContext) {
             } catch (err: any) {
                 vscode.window.showErrorMessage(`Failed to refresh image: ${err.message || err}`);
             }
+          }
         }, 500);
         const changeListener = watcher.onDidChange(refreshViewer);
         const createListener = watcher.onDidCreate(refreshViewer);
@@ -216,6 +220,8 @@ function openViewer(context: vscode.ExtensionContext, base64Data: string, variab
           meta: meta
         });
         break;
+      case 'setMode':
+        watchMode = !!message.text; break;
     }
   });
   return panel.webview;
