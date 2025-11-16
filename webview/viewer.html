@@ -196,6 +196,19 @@
           </svg>
         </button>
 
+        <div class="switch" title="观看模式">
+          <input type="checkbox" id="watch" class="switch-input">
+          <label for="watch" class="switch-label">
+            <svg class="switch-icon" viewBox="0 0 1024 1024">
+              <path class="switch-path" d="M759.600191 263.253706c-14.437827-9.465582-33.785477-5.429663-43.25106 8.987698-9.455349 14.427594-5.429663 33.795711 8.987698 43.25106 113.344464 74.322729 172.030052 183.955662 171.714873 221.87939-0.620124 74.14979-152.803151 288.444435-385.216455 288.444435-244.969271 0-385.211339-226.475058-385.211339-288.180422 0-38.473243 58.665121-148.675134 170.804131-222.134193 14.437827-9.455349 18.463514-28.814256 9.018398-43.240827-9.455349-14.427594-28.814256-18.473747-43.240827-9.018398C144.135748 341.236801 64.155159 468.094024 64.155159 537.637913c0 101.133352 178.419576 350.648149 447.679066 350.648149 272.125771 0 446.809255-246.372224 447.684182-350.383112C960.097598 468.957695 879.899044 342.141404 759.600191 263.253706z"></path>
+              <path class="switch-path" d="M389.948223 136.356574c-17.253966 0-31.233352 13.980409-31.233352 31.233352l0 30.470989c0 17.253966 13.980409 31.233352 31.233352 31.233352s31.233352-13.980409 31.233352-31.233352l0-30.470989C421.182598 150.336984 407.202189 136.356574 389.948223 136.356574z"></path>
+              <path class="switch-path" d="M633.728412 136.356574c-17.253966 0-31.233352 13.980409-31.233352 31.233352l0 30.470989c0 17.253966 13.980409 31.233352 31.233352 31.233352s31.233352-13.980409 31.233352-31.233352l0-30.470989C664.961764 150.336984 650.982378 136.356574 633.728412 136.356574z"></path>
+              <path class="switch-path" d="M511.524163 337.555969c43.963281 0 75.105558-30.308283 86.583984-48.223305 9.222035-14.396895 5.042853-33.348526-9.242502-42.753733-14.275121-9.42465-33.57263-5.409197-43.159986 8.744151-0.132006 0.203638-13.614066 19.765159-34.18252 19.765159-19.989263 0-32.43369-18.117636-33.267685-19.378349-9.181103-14.407128-28.285207-18.819624-42.834574-9.750061-14.650675 9.099239-19.155269 28.356838-10.044774 43.007513C436.591543 307.014372 467.347011 337.555969 511.524163 337.555969z"></path>
+              <path class="switch-path" d="M511.838318 733.499743c99.893104 0 181.170223-81.277118 181.170223-181.170223s-81.277118-181.170223-181.170223-181.170223-181.170223 81.277118-181.170223 181.170223S411.945213 733.499743 511.838318 733.499743zM511.838318 433.627025c65.456804 0 118.702496 53.245691 118.702496 118.702496s-53.245691 118.702496-118.702496 118.702496-118.702496-53.245691-118.702496-118.702496S446.381513 433.627025 511.838318 433.627025z"></path>
+            </svg>
+          </label>
+        </div>
+
         <div class="switch" title="维度选择">
           <input type="checkbox" id="dimFormat" class="switch-input">
           <label for="dimFormat" class="switch-label">
@@ -258,12 +271,12 @@
             <div class="item">offset width</div>
           </div>
           <div class="card__left">
-            <div class="item" id="pro-channel">-</div>
-            <div class="item" id="pro-colors">-</div>
-            <div class="item" id="pro-normalization">-</div>
-            <div class="item" id="pro-scale">-</div>
-            <div class="item" id="pro-offset-height">-</div>
-            <div class="item" id="pro-offset-width">-</div>
+            <div class="item" id="pro-channel">--</div>
+            <div class="item" id="pro-colors">--</div>
+            <div class="item" id="pro-normalization">--</div>
+            <div class="item" id="pro-scale">--</div>
+            <div class="item" id="pro-offset-height">--</div>
+            <div class="item" id="pro-offset-width">--</div>
           </div>
         </div>
       </div>
@@ -282,15 +295,15 @@
             <div class="item">variance</div>
           </div>
           <div class="card__left">
-            <div class="item" id="info-dtype">-</div>
-            <div class="item" id="info-shape">-</div>
-            <div class="item" id="info-channel">-</div>
-            <div class="item" id="info-position">-</div>
-            <div class="item" id="info-value-contain"><span  id="info-value">-</span></div>
-            <div class="item" id="info-max">-</div>
-            <div class="item" id="info-min">-</div>
-            <div class="item" id="info-mean">-</div>
-            <div class="item" id="info-variance">-</div>
+            <div class="item" id="info-dtype">--</div>
+            <div class="item" id="info-shape">--</div>
+            <div class="item" id="info-channel">--</div>
+            <div class="item" id="info-position">--</div>
+            <div class="item" id="info-value-contain"><span  id="info-value">--</span></div>
+            <div class="item" id="info-max">--</div>
+            <div class="item" id="info-min">--</div>
+            <div class="item" id="info-mean">--</div>
+            <div class="item" id="info-variance">--</div>
           </div>
         </div>
       </div>
@@ -308,7 +321,7 @@
 
   let imageDataArray = null;
   let metas = null;
-  let width = 0, height = 0, channels = 1;
+  let width = 0, height = 0, channels = 1, imgShape = [0,0,1];
   let currentChannel = 0;
 
   // 缩放和平移状态
@@ -321,33 +334,31 @@
   let lastX = 0;
   let lastY = 0;
 
+  // 状态
+  let watchMode = false, watchUrl = null;
+  let dimFormat = 'HWC';
+
   const CANVAS_CSS_SIZE = 384;
 
   const channelDrawerBtn = document.getElementById('channelDrawerBtn');
   const channelDrawerContent = document.getElementById('channelDrawerContent');
 
-  // 提取某通道数据
-  function extractChannel(data, w, h, c, format, ch) {
-    if (ch >=0)
-    {
-      const channelData = new Float32Array(w * h);
-      if (format) { // chw
-        for (let i = 0; i < w * h; i++) channelData[i] = data[ch * w * h + i];
-      } else {      // hwc
-        for (let i = 0; i < w * h; i++) channelData[i] = data[i * c + ch];
-      }
+  function extractChannel() {
+    let pl = width * height;
+    if (currentChannel >= 0) {
+      const channelData = new Float32Array(pl);
+      if (dimFormat === 'CHW') for (let i = 0; i < pl; i++) channelData[i] = imageDataArray[currentChannel * pl + i];
+      else if (dimFormat === 'HWC') for (let i = 0; i < pl; i++) channelData[i] = imageDataArray[i * channels + currentChannel];
       return channelData;
-    }
-    else
-    {
-      const pixelData = new Float32Array(w * h * c);
-      if (format) { // chw
-        for (let i = 0; i < w * h; i++) {
-          for (let chIdx = 0; chIdx < c; chIdx++) pixelData[i * c + chIdx] = data[chIdx * w * h + i];
+    } else {
+      let plc = pl * channels;
+      const pixelData = new Float32Array(plc);
+      if (dimFormat === 'CHW') {
+        for (let i = 0; i < pl; i++) {
+          for (let chIdx = 0; chIdx < channels; chIdx++) pixelData[i * channels + chIdx] = imageDataArray[chIdx * pl + i];
         }
-      } else {      // hwc
-        for (let i = 0; i < w * h * c; i++) pixelData[i] = data[i];
-      }
+      } 
+      else if (dimFormat === 'HWC') for (let i = 0; i < plc; i++) pixelData[i] = imageDataArray[i];
       return pixelData;
     }
 
@@ -375,11 +386,11 @@
     return [r, g, b];
   }
 
-  function createImageData(data, w, h, useColorMap, currentChannel) {
-    const imageData = new ImageData(w, h);
-    for (let i = 0; i < w * h; i++) {
+  function createImageData(data, useColorMap) {
+    const imageData = new ImageData(width, height);
+    for (let i = 0; i < width * height; i++) {
       if (currentChannel == -1){
-        const ch = Math.floor(data.length / (w * h));
+        const ch = channels;
         if (ch != 3 && ch != 4){
           vscode.postMessage({ command: 'showError', text: '通道数不匹配'});
           return;
@@ -411,10 +422,9 @@
 
     const useColorMap = document.getElementById('colorMapToggle').checked;
     const normalize = document.getElementById('normalizeToggle').checked;
-    const dimFormat = document.getElementById('dimFormat').checked;
-    const channelData = extractChannel(imageDataArray, width, height, channels, dimFormat, currentChannel);
+    const channelData = extractChannel();
     const normData = normalize ? normalizeData(channelData) : channelData;
-    const imgData = createImageData(normData, width, height, useColorMap, currentChannel);
+    const imgData = createImageData(normData, useColorMap);
 
     const offscreen = new OffscreenCanvas(width, height);
     const offCtx = offscreen.getContext('2d');
@@ -434,32 +444,65 @@
     ctx.drawImage(offscreen, 0, 0); 
     ctx.restore();
   }
+
+  function drawImageByUrl(imgUrl) {
+    if (!watchMode) return; //enable only in watchMode
+    const img = new Image();
+    img.onload = () => {
+      
+      canvas.width = CANVAS_CSS_SIZE;
+      canvas.height = CANVAS_CSS_SIZE;
+      canvas.style.width = `${CANVAS_CSS_SIZE}px`;
+      canvas.style.height = `${CANVAS_CSS_SIZE}px`;
+
+      ctx.save();
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      scale = Math.min(CANVAS_CSS_SIZE / img.width, CANVAS_CSS_SIZE / img.height);
+
+      setShowValue('pro-scale', Math.min(Math.max(scale, 0.2), 50));
+      setShowValue('pro-offset-height', (CANVAS_CSS_SIZE - img.height * pixelScale) / 2);
+      setShowValue('pro-offset-width', (CANVAS_CSS_SIZE - img.width * pixelScale) / 2);
+      setShowValue('info-shape', [img.height, img.width, 4]);
+
+      ctx.setTransform(pixelScale, 0, 0, pixelScale, offsetX, offsetY);
+      ctx.imageSmoothingEnabled = false; 
+      ctx.drawImage(img, 0, 0);
+      ctx.restore();
+    };
+    img.onerror = (e) => {
+      console.error('Image load error:', e);
+      vscode.postMessage({ command: 'showInfo', text: `img.onerror triggered: ${e.message || e}` });
+    };
+    img.src = imgUrl;
+
+  }
+
   canvas.addEventListener('wheel', (e) => {
-      if (e.ctrlKey) {
-          e.preventDefault();
+    if (watchMode) return;
+    if (e.ctrlKey) {
+        e.preventDefault();
 
-          const scaleFactor = e.deltaY < 0 ? 1.1 : 0.9;
-          const rect = canvas.getBoundingClientRect();
-          const mouseX = e.clientX - rect.left;
-          const mouseY = e.clientY - rect.top;
+        const scaleFactor = e.deltaY < 0 ? 1.1 : 0.9;
+        const rect = canvas.getBoundingClientRect();
+        const mouseX = e.clientX - rect.left;
+        const mouseY = e.clientY - rect.top;
 
-          const canvasX = (mouseX - offsetX) / pixelScale;
-          const canvasY = (mouseY - offsetY) / pixelScale;
+        const canvasX = (mouseX - offsetX) / pixelScale;
+        const canvasY = (mouseY - offsetY) / pixelScale;
 
-          pixelScale *= scaleFactor;
-          pixelScale = Math.min(Math.max(pixelScale, 0.2), 50)
+        scale *= scaleFactor;
+        setShowValue('pro-scale', Math.min(Math.max(scale, 0.2), 50));
 
-          offsetX = mouseX - canvasX * pixelScale;
-          offsetY = mouseY - canvasY * pixelScale;
+        setShowValue('pro-offset-height', mouseY - canvasY * pixelScale);
+        setShowValue('pro-offset-width', mouseX - canvasX * pixelScale);
 
-          document.getElementById('pro-scale').textContent = pixelScale || '-';
-          document.getElementById('pro-offset-height').textContent = `${offsetY}` || '-';
-          document.getElementById('pro-offset-width').textContent = `${offsetX}` || '-';
-          drawImage();
-      }
+        drawImage();
+    }
   }, { passive: false });
 
   canvas.addEventListener('mousedown', (e) => {
+      if (watchMode) return;
       if (e.button === 0 && !e.ctrlKey) { 
           e.preventDefault();
           isDragging = true;
@@ -471,7 +514,7 @@
 
   canvas.addEventListener('mousemove', (e) => {
       // 确保图像数据存在
-      if (!imageDataArray) return;
+      if (!imageDataArray || watchMode) return;
 
       const rect = canvas.getBoundingClientRect();
       const mouseX = e.clientX - rect.left;
@@ -483,55 +526,51 @@
         const y = Math.floor(imageY);
         let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = null;
         if (currentChannel == -1){
-          if (document.getElementById('dimFormat').checked) {
+          if (dimFormat === 'CHW') {
             pos1 = 0 * height * width + y * width + x;
             pos2 = 1 * height * width + y * width + x;
             pos3 = 2 * height * width + y * width + x; 
             pos4 = channels === 4? 3 * height * width + y * width + x:null;
-          } else{
-            pos1 = y * width * channels + x * channels + currentChannel * 0;
-            pos2 = y * width * channels + x * channels + currentChannel * 1;
-            pos3 = y * width * channels + x * channels + currentChannel * 2; 
-            pos4 = channels === 4? y * width * channels + x * channels + currentChannel * 3:null;
+          } else if (dimFormat === 'HWC'){
+            pos1 = y * width * channels + x * channels + 0;
+            pos2 = y * width * channels + x * channels + 1;
+            pos3 = y * width * channels + x * channels + 2; 
+            pos4 = channels === 4? y * width * channels + x * channels + 3 : null;
           }
-
-          document.getElementById('info-position').textContent = `${y},${x}`;
-          document.getElementById('info-value').textContent = `${imageDataArray[pos1].toFixed(2)},`
-                  +`${imageDataArray[pos2].toFixed(2)},`
-                  +`${imageDataArray[pos3].toFixed(2)}` 
-                  + `${channels===4?','+imageDataArray[pos4].toFixed(2):''}`;
+          
+          setShowValue('info-position', `${y},${x}`);
+          setShowValue('info-value', `${imageDataArray[pos1].toFixed(2)},`
+                  +`${imageDataArray[pos2].toFixed(2)},${imageDataArray[pos3].toFixed(2)}`
+                  + `${channels===4?','+imageDataArray[pos4].toFixed(2):''}`);
 
         }else{
-          if (document.getElementById('dimFormat').checked) pos = currentChannel * height * width + y * width + x; 
-          else pos = y * width * channels + x * channels + currentChannel;
-          document.getElementById('info-position').textContent = `${y},${x}`;
-          document.getElementById('info-value').textContent = `${imageDataArray[pos]}`;
+          if (dimFormat === 'HWC') pos = currentChannel * height * width + y * width + x; 
+          else if (dimFormat === 'CHW') pos = y * width * channels + x * channels + currentChannel;
+          setShowValue('info-position', `${y},${x}`);
+          setShowValue('info-value', imageDataArray[pos]);
         }
 
       } else {
-        document.getElementById('info-position').textContent = '-';
-        document.getElementById('info-value').textContent = '-';
+        setShowValue('info-position', '--');
+        setShowValue('info-value', '--');
       }
 
       if (!isDragging) e.preventDefault(); 
   });
 
   canvas.addEventListener('mousemove', (e) => {
-      if (!isDragging) return; 
+      if (!isDragging || watchMode) return; 
       
       e.preventDefault();
       
       const deltaX = e.clientX - lastX;
       const deltaY = e.clientY - lastY;
 
-      offsetX += deltaX;
-      offsetY += deltaY;
-
       lastX = e.clientX;
       lastY = e.clientY;
       
-      document.getElementById('pro-offset-height').textContent = `${offsetY}` || '-';
-      document.getElementById('pro-offset-width').textContent = `${offsetX}` || '-';
+      setShowValue('pro-offset-height', offsetY + deltaY);
+      setShowValue('pro-offset-width', offsetX + deltaX);
 
       drawImage();
   });
@@ -539,8 +578,9 @@
   canvas.addEventListener('mouseleave', () => {
       isDragging = false;
       canvas.style.cursor = 'default';
-      document.getElementById('info-position').textContent = '-';
-      document.getElementById('info-value').textContent = '-';
+      if (watchMode) return;
+      setShowValue('info-position', '--');
+      setShowValue('info-value', '--');
   });
 
   canvas.addEventListener('mouseup', () => {
@@ -558,8 +598,7 @@
       if(i === currentChannel) btn.classList.add('selected');
       btn.addEventListener('click', () => {
         if (currentChannel === i) return;
-        currentChannel = i;
-        document.getElementById('info-channel').textContent = `${i < 0 ? "all" : i}`;
+        setShowValue('info-channel', i);
         updateSelectedChannelButton();
         drawImage();
       });
@@ -575,15 +614,10 @@
 
   function initImgScalePosition(){
     if (!imageDataArray) return;
-    pixelScale = Math.min(CANVAS_CSS_SIZE / width, CANVAS_CSS_SIZE / height);
-    pixelScale = pixelScale = Math.min(Math.max(pixelScale, 0.2), 50);
-    
-    offsetX = (CANVAS_CSS_SIZE - width * pixelScale) / 2;
-    offsetY = (CANVAS_CSS_SIZE - height * pixelScale) / 2;
-    
-    document.getElementById('pro-scale').textContent = pixelScale || '-';
-    document.getElementById('pro-offset-height').textContent = `${offsetY}` || '-';
-    document.getElementById('pro-offset-width').textContent = `${offsetX}` || '-';
+    scale = Math.min(CANVAS_CSS_SIZE / width, CANVAS_CSS_SIZE / height);
+    setShowValue('pro-scale', Math.min(Math.max(scale, 0.2), 50));
+    setShowValue('pro-offset-height', (CANVAS_CSS_SIZE - height * scale) / 2);
+    setShowValue('pro-offset-width', (CANVAS_CSS_SIZE - width * scale) / 2);
   }
 
   // 按钮点击，展开/收起抽屉
@@ -593,37 +627,57 @@
 
   // 其他控件事件
   document.getElementById('dimFormat').addEventListener('change', e => {
-    const dimFormat = document.getElementById('dimFormat').checked;
-    if (dimFormat) {
-      [channels, height, width] = [height, width, channels];
-      document.getElementById('pro-channel').textContent = 'CHW';
-    }
-    else {
-      [height, width, channels] = [channels, height, width];
-      document.getElementById('pro-channel').textContent = 'HWC' || '-';
-    }
-    currentChannel = 0;
+    dimFormat = document.getElementById('dimFormat').checked ? 'CHW' : 'HWC';
+    setShowValue('info-shape', imgShape);
+    setShowValue('info-channel', 0 - (channels === 3 || channels === 4));
     populateChannelButtons(channels);
     initImgScalePosition();
     drawImage();
   });
+  document.getElementById('watch').addEventListener('change', e => {
+    watchMode = document.getElementById('watch').checked;
+    vscode.postMessage({command: "setMode", text: watchMode});
+    if (watchMode) {
+      initImgScalePosition();
+      setShowValue('info-max', '--');
+      setShowValue('info-min', '--');
+      setShowValue('info-mean', '--');
+      setShowValue('info-variance', '--');
+      drawImage();
+    }
+    else {
+      // init
+      console.log(watchUrl.split(",")[0]);
+      if (watchUrl) {
+        setImageArrayFromUrl(watchUrl);
+        watchUrl = null;
+      }
+      setShowValue('info-shape', imgShape);
+      setShowValue('info-position', '--');
+      setShowValue('info-value', '--');
+      const blob = new Blob([document.querySelector('#worker-script').textContent], { type: 'application/javascript' });
+      const worker = new Worker(URL.createObjectURL(blob));
+      worker.postMessage({ imageDataArray });
+      worker.onmessage = function (e) {
+        const { max, min, mean, variance } = e.data;
+        setShowValue('info-max', max);
+        setShowValue('info-min', min);
+        setShowValue('info-mean', mean);
+        setShowValue('info-variance', variance);
+      };
+    }
+  });
   document.getElementById('colorMapToggle').addEventListener('change', e => {
     const colorType = document.getElementById('colorMapToggle').checked;
-    if (colorType){
-      document.getElementById('pro-colors').textContent = 'JET';
-    } else {
-      document.getElementById('pro-colors').textContent = 'Grey';
-    }
+    if (colorType) setShowValue('pro-colors', 'JET');
+    else setShowValue('pro-colors', 'Grey');
     drawImage();
   });
 
   document.getElementById('normalizeToggle').addEventListener('change', e => {
     const normType = document.getElementById('normalizeToggle').checked;
-    if (normType){
-      document.getElementById('pro-normalization').textContent = 'true';
-    } else {
-      document.getElementById('pro-normalization').textContent = 'false';
-    }
+    if (normType) setShowValue('pro-normalization', 'true'); 
+    else setShowValue('pro-normalization', 'false'); 
     drawImage();
   });
 
@@ -652,6 +706,54 @@
     drawImage();
   });
 
+  function setShowValue(id, value){
+    if (id === 'info-shape') {
+      imgShape = value;
+      if (dimFormat === 'HWC') [height, width, channels] = imgShape;
+      else if (dimFormat === 'CHW') [channels, height, width] = imgShape;
+      document.getElementById('pro-channel').textContent = dimFormat;
+    }else if (id === 'info-channel'){
+      currentChannel = value;
+      if (value < 0) value = 'all';  
+    }
+    else if (id === 'pro-scale') pixelScale = value;
+    else if (id === 'pro-offset-height') offsetY = value;
+    else if (id === 'pro-offset-width') offsetX = value;
+    document.getElementById(id).textContent = `${value}`;
+  }
+
+  async function setImageArrayFromUrl(imgUrl){
+    const blob = await (await fetch(imgUrl)).blob();
+    const bitmap = await createImageBitmap(blob);
+    const off = new OffscreenCanvas(bitmap.width, bitmap.height);
+    const ctx = off.getContext("2d");
+    ctx.drawImage(bitmap, 0, 0);
+    const imgData = ctx.getImageData(0, 0, bitmap.width, bitmap.height);
+    imageDataArray = new Uint8Array(imgData.data);
+  }
+
+  function setImageArray(data, dtype){
+
+    console.log("f100", data.substring(0, 100));
+    const raw = atob(data);
+    const buffer = new ArrayBuffer(raw.length);
+    const uint8View = new Uint8Array(buffer);
+    for(let i=0; i<raw.length; i++) {
+      uint8View[i] = raw.charCodeAt(i);
+    }
+
+    switch(dtype) {
+      case 'float32': imageDataArray = new Float32Array(buffer); break;
+      case 'float64': imageDataArray = new Float64Array(buffer); break;
+      case 'int32': imageDataArray = new Int32Array(buffer); break;
+      case 'int16': imageDataArray = new Int16Array(buffer); break;
+      case 'int8': imageDataArray = new Int8Array(buffer); break;
+      case 'uint16': imageDataArray = new Uint16Array(buffer); break;
+      case 'uint8': imageDataArray = new Uint8Array(buffer); break;
+      default:
+        vscode.postMessage({ command: 'showError', text: `error: 不支持类型 ${dtype}`});
+    }
+  }
   // 接收 VS Code 传输数据
   window.addEventListener('message', event => {
     const msg = event.data;
@@ -667,60 +769,44 @@
       const shape = meta.shape;
       const dtype = meta.dtype.toLowerCase();
 
-      const raw = atob(data);
-      const buffer = new ArrayBuffer(raw.length);
-      const uint8View = new Uint8Array(buffer);
-      for(let i=0; i<raw.length; i++) {
-        uint8View[i] = raw.charCodeAt(i);
-      }
-
-      switch(dtype) {
-        case 'float32': imageDataArray = new Float32Array(buffer); break;
-        case 'float64': imageDataArray = new Float64Array(buffer); break;
-        case 'int32': imageDataArray = new Int32Array(buffer); break;
-        case 'int16': imageDataArray = new Int16Array(buffer); break;
-        case 'int8': imageDataArray = new Int8Array(buffer); break;
-        case 'uint16': imageDataArray = new Uint16Array(buffer); break;
-        case 'uint8': imageDataArray = new Uint8Array(buffer); break;
-        default:
-          vscode.postMessage({ command: 'showError', text: `error: 不支持类型 ${dtype}`});
-          return;
-      }
+      setImageArray(data, dtype);
       
       [height, width, channels] = shape || [];
       height = height ?? 1;
       width = width ?? 1;
-      channels = channels ?? -1;
-      if (channels === -1 && imageDataArray.length % (height * width) != 0){
+      channels = channels ?? undefined;
+      if (!channels && imageDataArray.length % (height * width) != 0){
           vscode.postMessage({ command: 'showError', text: `error: 通道错误`});
           return;
       }
-      channels = channels === -1? Math.floor(imageDataArray.length / (height * width)): channels;
-      currentChannel = 0;
-      populateChannelButtons(channels);
+      channels = !channels? Math.ceil(imageDataArray.length / (height * width)): channels;
 
-      document.getElementById('info-shape').textContent = `${shape}` || '-';
-      document.getElementById('info-dtype').textContent = `${dtype}` || '-';
-      document.getElementById('info-channel').textContent = '0';
+      setShowValue('info-shape', [height, width, channels]);
+      setShowValue('info-dtype', dtype);
+      setShowValue('info-channel', 0 - (channels === 3 || channels === 4));
+      populateChannelButtons(channels);
         
       const blob = new Blob([document.querySelector('#worker-script').textContent], { type: 'application/javascript' });
       const worker = new Worker(URL.createObjectURL(blob));
       worker.postMessage({ imageDataArray });
       worker.onmessage = function (e) {
           const { max, min, mean, variance } = e.data;
-          document.getElementById('info-max').textContent = `${max}` || '--';
-          document.getElementById('info-min').textContent = `${min}` || '--';
-          document.getElementById('info-mean').textContent = `${mean}` || '--';
-          document.getElementById('info-variance').textContent = `${variance}` || '--';
+          setShowValue('info-max', max);
+          setShowValue('info-min', min);
+          setShowValue('info-mean', mean);
+          setShowValue('info-variance', variance);
         };
 
       initImgScalePosition();
 
-      document.getElementById('pro-channel').textContent = 'HWC' || '-';
-      document.getElementById('pro-normalization').textContent = 'false';
-      document.getElementById('pro-colors').textContent = 'Grey';
+      setShowValue('pro-channel', 'HWC');
+      setShowValue('pro-normalization', 'false');
+      setShowValue('pro-colors', 'Grey');
       drawImage();
-    }
+    }else if (msg.type === 'refresh') {
+      watchUrl = msg.url;
+      drawImageByUrl(msg.url);
+    }else if (msg.type === 'disableWatch') document.getElementById('watch').disabled = true;
   });
 </script>
 <script id="worker-script" type="application/javascript">
