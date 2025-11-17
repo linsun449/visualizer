@@ -782,7 +782,6 @@
           return;
       }
       channels = !channels? Math.ceil(imageDataArray.length / (height * width)): channels;
-      populateChannelButtons(channels);
         
       const blob = new Blob([document.querySelector('#worker-script').textContent], { type: 'application/javascript' });
       const worker = new Worker(URL.createObjectURL(blob));
@@ -804,6 +803,7 @@
       setShowValue('info-shape', [height, width, channels]);
       setShowValue('info-dtype', dtype);
       setShowValue('info-channel', 0 - (channels === 3 || channels === 4));
+      populateChannelButtons(channels);
 
       drawImage();
     }else if (msg.type === 'refresh') {
