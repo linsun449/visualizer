@@ -7,11 +7,12 @@
   "engines": {
     "vscode": "^1.75.0"
   },
-  "main": "./dist/extension.js",
+  "main": "./out/extension.js",
   "activationEvents": [
     "onDebug",
     "onCommand: visualize.debugVariable",
-    "onCommand: visualize.visualizeImage"
+    "onCommand: visualize.visualizeImage",
+    "onView: watchVariables"
   ],
   "scripts": {
     "compile": "npx tsc -p ./",
@@ -65,6 +66,15 @@
           "group": "navigation"
         }
       ]
+    },
+    "views": {
+      "debug": [
+        {
+          "icon": "asset/banner.png",
+          "id": "watchVariables",
+          "name": "Variable Shape Viewer"
+        }
+      ]
     }
   },
   "extensionDependencies": [
@@ -87,6 +97,7 @@
     "image-type": "^4.1.0",
     "jpeg-js": "^0.4.4",
     "pngjs": "^7.0.0",
-    "tiff": "^7.1.2"
+    "tiff": "^7.1.2",
+    "vscode-debugadapter": "^1.51.0"
   }
 }
