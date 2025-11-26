@@ -5,7 +5,6 @@ import * as fs from 'fs';
 import jpeg from "jpeg-js";
 import imageType from 'image-type';
 import decodeBmp from "decode-bmp";
-import { replaceRepr } from './debugSession';
 import { showWatchVariable } from './proxySession';
 
 const tiff = require("tiff");
@@ -39,9 +38,6 @@ export function activate(context: vscode.ExtensionContext) {
       if (e.event === 'continued') currentFrame = undefined;
   }));
 
-  // context.subscriptions.push(vscode.debug.onDidStartDebugSession(session => {
-  //   replaceRepr(context, session.type);
-  // }));
 
   showWatchVariable(context);
 
