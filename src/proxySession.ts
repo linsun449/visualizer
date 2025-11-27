@@ -40,7 +40,7 @@ export class WatchVariableItem extends vscode.TreeItem {
         const shape = this.detail.shape ? `shape=[${this.detail.shape}]` : "";
         const dtype = this.detail.dtype ? `dtype=${this.detail.dtype}` : "";
         const info = [shape, dtype].filter(Boolean).join(", ");
-        return ` =  ${this.variableInfo.type}${info ? `(${info})` : ""}`;
+        return ` =  ${this.variableInfo.type}${info ? `(${info})` : ""}: ${this.variableInfo.value}`;
     }
     return WatchVariableItem.formatShort(this.variableInfo.value);
   }
@@ -85,18 +85,14 @@ export class WatchVariableItem extends vscode.TreeItem {
     const v = this.variableInfo;
     const device = v.device || this.detail?.device || "cpu";
 
-    const color =
-      device.toLowerCase().includes("cuda") ||
-      device.toLowerCase().includes("gpu")
-        ? new vscode.ThemeColor("terminal.ansiYellow")
-        : new vscode.ThemeColor("terminal.ansiBlue");
+    const color = device.toLowerCase().includes("cuda") || device.toLowerCase().includes("gpu");
 
     const icon = (() => {
       switch (v.type) {
-        case "Tensor":
+        case "Tensor": if (color) return "symbol-event";
         case "ndarray":
         case "array":
-          return "symbol-array";
+          return "symbol-variable";
         case "int":
         case "float":
         case "number":
@@ -107,32 +103,25 @@ export class WatchVariableItem extends vscode.TreeItem {
         case "bool":
         case "boolean":
           return "symbol-boolean";
-        case "dict":
+        case "dict": return "symbol-object";
+        case "list": return "symbol-array";
         case "object":
-          return "symbol-object";
-        case "function":
-          return "symbol-function";
         case "module":
-          return "symbol-module";
         case "class":
           return "symbol-class";
+        case "function":
+          return "symbol-function";
         case "null":
-          return "symbol-null";
         case "undefined":
-          return "symbol-undefined";
+          return "warning";
       }
-      if (Array.isArray(v.value)) return "symbol-array";
-      if (typeof v.value === "number") return "symbol-number";
-      if (typeof v.value === "string") return "symbol-string";
-      if (typeof v.value === "boolean") return "symbol-boolean";
-      if (typeof v.value === "function") return "symbol-function";
-      if (typeof v.value === "object" && v.value !== null)
-        return "symbol-object";
+      if (typeof v.value === 'string' && v.value.includes("object") && v.value !== null) return "symbol-class";
 
-      return "symbol-undefined";
+      return "warning";
     })();
 
-    return new vscode.ThemeIcon(icon, color);
+    return new vscode.ThemeIcon(icon, 
+      color?new vscode.ThemeColor("terminal.ansiYellow"):new vscode.ThemeColor("terminal.ansiBlue"));
   }
 }
 
