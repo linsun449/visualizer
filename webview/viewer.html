@@ -544,8 +544,8 @@
                   + `${channels===4?','+imageDataArray[pos4].toFixed(2):''}`);
 
         }else{
-          if (dimFormat === 'HWC') pos = currentChannel * height * width + y * width + x; 
-          else if (dimFormat === 'CHW') pos = y * width * channels + x * channels + currentChannel;
+          if (dimFormat === 'HWC') pos =  y * width * channels + x * channels + currentChannel;
+          else if (dimFormat === 'CHW') pos = currentChannel * height * width + y * width + x;
           setShowValue('info-position', `${y},${x}`);
           setShowValue('info-value', imageDataArray[pos]);
         }
