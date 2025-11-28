@@ -668,6 +668,7 @@
   });
   document.getElementById('colorMapToggle').addEventListener('change', e => {
     const colorType = document.getElementById('colorMapToggle').checked;
+    if (currentChannel === -1) setShowValue('pro-colors', 'RGB');
     if (colorType) setShowValue('pro-colors', 'JET');
     else setShowValue('pro-colors', 'Grey');
     drawImage();

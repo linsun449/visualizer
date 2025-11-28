@@ -1,7 +1,7 @@
 # VS Code 图像数据可视化插件
 
 ## 插件概述
-
+<img src="asset/example.png">
 本插件用于在 VS Code 中可视化显示多维数组（NumPy, Tensor）、图像文件。
 
 ---
