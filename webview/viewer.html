@@ -600,6 +600,9 @@
         if (currentChannel === i) return;
         setShowValue('info-channel', i);
         updateSelectedChannelButton();
+        if (currentChannel === -1) setShowValue('pro-colors', 'RGB');
+        else if (document.getElementById('colorMapToggle').checked) setShowValue('pro-colors', 'JET');
+        else setShowValue('pro-colors', 'Grey');
         drawImage();
       });
       channelDrawerContent.appendChild(btn);
@@ -669,7 +672,7 @@
   document.getElementById('colorMapToggle').addEventListener('change', e => {
     const colorType = document.getElementById('colorMapToggle').checked;
     if (currentChannel === -1) setShowValue('pro-colors', 'RGB');
-    if (colorType) setShowValue('pro-colors', 'JET');
+    else if (colorType) setShowValue('pro-colors', 'JET');
     else setShowValue('pro-colors', 'Grey');
     drawImage();
   });
