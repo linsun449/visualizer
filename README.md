@@ -33,6 +33,7 @@ npm install jpeg-js image-type decode-bmp tiff pngjs
 ```
 ### 3. 编译打包插件
 ```bash
+npm run compile
 npm run build
 npm run package
 # 生成的 .vsix 文件可通过 VS Code 扩展面板“从 VSIX 安装...”进行安装。
