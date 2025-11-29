@@ -11,7 +11,8 @@
   "activationEvents": [
     "onDebug",
     "onCommand: visualize.debugVariable",
-    "onCommand: visualize.visualizeImage"
+    "onCommand: visualize.visualizeImage",
+    "onView: watchVariables"
   ],
   "scripts": {
     "compile": "npx tsc -p ./",
@@ -27,7 +28,18 @@
       {
         "command": "visualize.visualizeImage",
         "title": "Visualize Image File"
+      },      
+      {
+        "command": "watchVariables.addExpression",
+        "title": "Add Expression",
+        "icon": "$(add)"
+      },
+      {
+        "command": "watchVariables.removeExpression",
+        "title": "Remove Expression",
+        "icon": "$(remove)"
       }
+
     ],
     "menus": {
       "editor/context": [
@@ -64,6 +76,34 @@
           "when": "resourceExtname =~ /\\.(png|jpg|jpeg|bmp|tif|tiff)$/",
           "group": "navigation"
         }
+      ],
+      "view/title": [
+        {
+          "command": "watchVariables.addExpression",
+          "when": "view == watchVariables",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "watchVariables.removeExpression",
+          "when": "view == watchVariables && viewItem == userExpr",
+          "group": "inline"
+        },
+        {
+          "command": "visualize.debugVariable",
+          "when": "view == watchVariables",
+          "group": "navigation"
+        }
+      ]
+    },
+    "views": {
+      "debug": [
+        {
+          "icon": "asset/banner.png",
+          "id": "watchVariables",
+          "name": "Visualizer"
+        }
       ]
     }
   },
@@ -87,6 +127,7 @@
     "image-type": "^4.1.0",
     "jpeg-js": "^0.4.4",
     "pngjs": "^7.0.0",
-    "tiff": "^7.1.2"
+    "tiff": "^7.1.2",
+    "vscode-debugadapter": "^1.51.0"
   }
 }

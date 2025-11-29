@@ -5,6 +5,7 @@ import * as fs from 'fs';
 import jpeg from "jpeg-js";
 import imageType from 'image-type';
 import decodeBmp from "decode-bmp";
+import { showWatchVariable } from './proxySession';
 
 const tiff = require("tiff");
 const { PNG } = require("pngjs");
@@ -28,14 +29,17 @@ function debounce<T extends (...args: any[]) => any>(func: T, delay: number) {
 
 export function activate(context: vscode.ExtensionContext) {
 
-  vscode.debug.onDidChangeActiveStackItem(stackItem => {
+  context.subscriptions.push(vscode.debug.onDidChangeActiveStackItem(stackItem => {
       if (stackItem instanceof vscode.DebugStackFrame) currentFrame = stackItem;
-  });
-  vscode.debug.onDidTerminateDebugSession(() => {currentFrame = undefined;});
-  vscode.debug.onDidChangeBreakpoints(() => {});
-  vscode.debug.onDidReceiveDebugSessionCustomEvent(e => {
+  }));
+  context.subscriptions.push(vscode.debug.onDidTerminateDebugSession(() => {currentFrame = undefined;}));
+  context.subscriptions.push(vscode.debug.onDidChangeBreakpoints(() => {}));
+  context.subscriptions.push(vscode.debug.onDidReceiveDebugSessionCustomEvent(e => {
       if (e.event === 'continued') currentFrame = undefined;
-  });
+  }));
+
+
+  showWatchVariable(context);
 
   const disposable_var = vscode.commands.registerCommand('visualize.debugVariable', async (variableItem?: any) => {
     let variableName: string | undefined;
