@@ -238,6 +238,15 @@
           </label>
         </div>
 
+        <div class="switch" title="批选择">
+          <input type="checkbox" id="BatchChannelToggle" class="switch-input">
+          <label for="BatchChannelToggle" class="switch-label">
+            <svg class="switch-icon" viewBox="0 0 1024 1024">
+              <path class="switch-path" d="M344.995119 583.156065H100.080551c-108.172316 26.534127-93.887349 114.256866-93.887348 114.256867L2.121586 909.708822c6.118861 108.172316 102.053455 114.291178 102.053456 114.291178h236.748461c69.38903-2.035808 102.053455-93.887349 102.053455-93.887349V685.209521c-2.047245-75.519328-97.981839-102.053455-97.981839-102.053456z m32.675863 338.801917s-14.284968 28.592809-53.068255 32.652988H112.329711s-36.736041-4.083053-40.819095-44.902148V681.126467s10.201914-32.652988 40.819095-32.652988h220.427686s40.819095 6.118861 44.902148 53.068254v220.416249z m-28.59281-824.547999H104.163604C-4.008712 123.94411 10.276256 211.70116 10.276256 211.70116L6.20464 423.96274c6.118861 108.172316 102.053455 114.291178 102.053455 114.291178h236.748461c69.38903-2.035808 102.053455-93.887349 102.053455-93.887349V199.452001c-2.035808-75.485017-97.970402-102.053455-97.970402-102.053455z m32.652989 338.801917s-14.284968 28.592809-53.068255 32.652988H116.412764s-36.736041-4.083053-40.819095-44.902148V195.323199s10.201914-32.652988 40.819095-32.652988h220.427686s40.819095 6.118861 44.902148 53.068254V436.2119zM1000.879854 195.574816L827.710364 22.382451C732.461997-35.340712 680.503144 36.816101 680.503144 36.816101L527.497303 184.023321c-72.156814 80.814716-8.657903 152.982967-8.657903 152.982967l167.439492 167.40518c50.506338 47.624183 138.549317 5.718562 138.549317 5.718562l173.180927-173.123742c51.958853-54.841008 2.882155-141.431472 2.882155-141.431472zM784.409413 458.228363s-30.308378 10.09898-60.616756-14.43365L573.71472 293.682463s-23.091553-28.8673 2.882155-60.616755l161.629433-161.606559s30.308378-15.874728 51.958853 5.718562l155.910871 155.887997s24.53263 33.167659-5.718562 69.274658z m46.331789 120.844649H585.826634c-108.172316 26.534127-93.887349 114.291178-93.887349 114.291178l-4.083053 212.261579c6.130298 108.183753 102.064892 114.314052 102.064892 114.314052h236.748462c69.38903-2.035808 102.053455-93.887349 102.053455-93.887349V681.126467c-2.047245-75.485017-97.970402-102.053455-97.970402-102.053455z m32.664425 338.801917s-14.284968 28.592809-53.068254 32.652988H598.075793s-36.736041-4.083053-40.819094-44.902148V677.043414s10.201914-32.652988 40.819094-32.652988H818.503479s40.819095 6.130298 44.902148 53.022506v220.461997z"></path>
+            </svg>
+          </label>
+        </div>
+
         <div title="选择通道">
           <input type="checkbox" id="channelDrawerBtn">
           <label for="channelDrawerBtn" class="channelDrawerBtnToggle">
@@ -286,6 +295,7 @@
           <div class="card__right">
             <div class="item">dtype</div>
             <div class="item">shape</div>
+            <div class="item">batch</div>
             <div class="item">channel</div>
             <div class="item">position</div>
             <div class="item">value</div>
@@ -297,6 +307,7 @@
           <div class="card__left">
             <div class="item" id="info-dtype">--</div>
             <div class="item" id="info-shape">--</div>
+            <div class="item" id="info-batch">--</div>
             <div class="item" id="info-channel">--</div>
             <div class="item" id="info-position">--</div>
             <div class="item" id="info-value-contain"><span  id="info-value">--</span></div>
@@ -321,8 +332,8 @@
 
   let imageDataArray = null;
   let metas = null;
-  let width = 0, height = 0, channels = 1, imgShape = [0,0,1];
-  let currentChannel = 0;
+  let batch = 0, width = 0, height = 0, channels = 1, imgShape = [1,0,0,1];
+  let currentChannel = 0, currentBatch = 0;
 
   // 缩放和平移状态
   let pixelScale = 1;
@@ -337,28 +348,29 @@
   // 状态
   let watchMode = false, watchUrl = null;
   let dimFormat = 'HWC';
+  let batchSelectMode = false;
 
   const CANVAS_CSS_SIZE = 384;
 
   const channelDrawerBtn = document.getElementById('channelDrawerBtn');
   const channelDrawerContent = document.getElementById('channelDrawerContent');
 
-  function extractChannel() {
-    let pl = width * height;
+  function extractImageData() {
+    const pl = width * height, offsets = currentBatch * height * width * channels;
     if (currentChannel >= 0) {
       const channelData = new Float32Array(pl);
-      if (dimFormat === 'CHW') for (let i = 0; i < pl; i++) channelData[i] = imageDataArray[currentChannel * pl + i];
-      else if (dimFormat === 'HWC') for (let i = 0; i < pl; i++) channelData[i] = imageDataArray[i * channels + currentChannel];
+      if (dimFormat === 'CHW') for (let i = 0; i < pl; i++) channelData[i] = imageDataArray[offsets + currentChannel * pl + i];
+      else if (dimFormat === 'HWC') for (let i = 0; i < pl; i++) channelData[i] = imageDataArray[offsets + i * channels + currentChannel];
       return channelData;
     } else {
       let plc = pl * channels;
       const pixelData = new Float32Array(plc);
       if (dimFormat === 'CHW') {
         for (let i = 0; i < pl; i++) {
-          for (let chIdx = 0; chIdx < channels; chIdx++) pixelData[i * channels + chIdx] = imageDataArray[chIdx * pl + i];
+          for (let chIdx = 0; chIdx < channels; chIdx++) pixelData[i * channels + chIdx] = imageDataArray[offsets + chIdx * pl + i];
         }
       } 
-      else if (dimFormat === 'HWC') for (let i = 0; i < plc; i++) pixelData[i] = imageDataArray[i];
+      else if (dimFormat === 'HWC') for (let i = 0; i < plc; i++) pixelData[i] = imageDataArray[offsets + i];
       return pixelData;
     }
 
@@ -422,7 +434,7 @@
 
     const useColorMap = document.getElementById('colorMapToggle').checked;
     const normalize = document.getElementById('normalizeToggle').checked;
-    const channelData = extractChannel();
+    const channelData = extractImageData();
     const normData = normalize ? normalizeData(channelData) : channelData;
     const imgData = createImageData(normData, useColorMap);
 
@@ -464,6 +476,7 @@
       setShowValue('pro-offset-height', (CANVAS_CSS_SIZE - img.height * pixelScale) / 2);
       setShowValue('pro-offset-width', (CANVAS_CSS_SIZE - img.width * pixelScale) / 2);
       setShowValue('info-shape', [img.height, img.width, 4]);
+      setShowValue('info-batch', 0);
 
       ctx.setTransform(pixelScale, 0, 0, pixelScale, offsetX, offsetY);
       ctx.imageSmoothingEnabled = false; 
@@ -525,17 +538,18 @@
         const x = Math.floor(imageX);
         const y = Math.floor(imageY);
         let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = null;
+        const offsets = currentBatch * height * width * channels;
         if (currentChannel == -1){
           if (dimFormat === 'CHW') {
-            pos1 = 0 * height * width + y * width + x;
-            pos2 = 1 * height * width + y * width + x;
-            pos3 = 2 * height * width + y * width + x; 
-            pos4 = channels === 4? 3 * height * width + y * width + x:null;
+            pos1 = offsets + 0 * height * width + y * width + x;
+            pos2 = offsets + 1 * height * width + y * width + x;
+            pos3 = offsets + 2 * height * width + y * width + x; 
+            pos4 = channels === 4? offsets + 3 * height * width + y * width + x:null;
           } else if (dimFormat === 'HWC'){
-            pos1 = y * width * channels + x * channels + 0;
-            pos2 = y * width * channels + x * channels + 1;
-            pos3 = y * width * channels + x * channels + 2; 
-            pos4 = channels === 4? y * width * channels + x * channels + 3 : null;
+            pos1 = offsets + y * width * channels + x * channels + 0;
+            pos2 = offsets + y * width * channels + x * channels + 1;
+            pos3 = offsets + y * width * channels + x * channels + 2; 
+            pos4 = channels === 4? offsets + y * width * channels + x * channels + 3 : null;
           }
           
           setShowValue('info-position', `${y},${x}`);
@@ -598,8 +612,11 @@
       if(i === currentChannel) btn.classList.add('selected');
       btn.addEventListener('click', () => {
         if (currentChannel === i) return;
+
         setShowValue('info-channel', i);
-        updateSelectedChannelButton();
+        const btns = channelDrawerContent.querySelectorAll('button');
+        btns.forEach(b => b.classList.toggle('selected', +b.dataset.channel === currentChannel));
+
         if (currentChannel === -1) setShowValue('pro-colors', 'RGB');
         else if (document.getElementById('colorMapToggle').checked) setShowValue('pro-colors', 'JET');
         else setShowValue('pro-colors', 'Grey');
@@ -609,11 +626,27 @@
     }
   }
 
-  // 更新选中样式
-  function updateSelectedChannelButton() {
-    const btns = channelDrawerContent.querySelectorAll('button');
-    btns.forEach(b => b.classList.toggle('selected', +b.dataset.channel === currentChannel));
+  // 填充通道按钮，多列排列
+  function populateBatchButtons(n) {
+    channelDrawerContent.innerHTML = '';
+    for(let i=0; i<n; i++) {
+      const btn = document.createElement('button');
+      btn.textContent = i;
+      btn.dataset.channel = i;
+      if(i === currentBatch) btn.classList.add('selected');
+      btn.addEventListener('click', () => {
+        if (currentBatch === i) return;
+
+        setShowValue('info-batch', i);
+        const btns = channelDrawerContent.querySelectorAll('button');
+        btns.forEach(b => b.classList.toggle('selected', +b.dataset.channel === currentBatch));
+
+        drawImage();
+      });
+      channelDrawerContent.appendChild(btn);
+    }
   }
+
 
   function initImgScalePosition(){
     if (!imageDataArray) return;
@@ -669,6 +702,15 @@
       };
     }
   });
+  
+  document.getElementById('BatchChannelToggle').addEventListener('change', e => {
+    batchSelectMode = document.getElementById('BatchChannelToggle').checked;
+    if (batchSelectMode) populateBatchButtons(batch);
+    else populateChannelButtons(channels);
+    initImgScalePosition();
+    drawImage();
+  });
+
   document.getElementById('colorMapToggle').addEventListener('change', e => {
     const colorType = document.getElementById('colorMapToggle').checked;
     if (currentChannel === -1) setShowValue('pro-colors', 'RGB');
@@ -709,12 +751,27 @@
     drawImage();
   });
 
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown') return;
+    if (!channelDrawerContent.contains(document.activeElement) && document.activeElement !== document.body) return;
+    const buttons = Array.from(channelDrawerContent.querySelectorAll('button'));
+    const selectedIndex = buttons.findIndex(btn => btn.classList.contains('selected'));
+
+    if (selectedIndex === -1) return;
+
+    let newIndex;
+    if (e.key === 'ArrowDown') newIndex = Math.min(selectedIndex + 1, buttons.length - 1); 
+    else newIndex = Math.max(selectedIndex - 1, 0);
+    buttons[newIndex]?.click();
+  });
+
   function setShowValue(id, value){
     if (id === 'info-shape') {
       imgShape = value;
       if (dimFormat === 'HWC') [height, width, channels] = imgShape;
       else if (dimFormat === 'CHW') [channels, height, width] = imgShape;
       document.getElementById('pro-channel').textContent = dimFormat;
+      value = `${batch},${value}`
     }else if (id === 'info-channel'){
       currentChannel = value;
       if (value < 0) {
@@ -722,6 +779,7 @@
         document.getElementById('pro-colors').textContent = `RGB`;
       }
     }
+    else if (id === 'info-batch') currentBatch = value;
     else if (id === 'pro-scale') pixelScale = value;
     else if (id === 'pro-offset-height') offsetY = value;
     else if (id === 'pro-offset-width') offsetX = value;
@@ -740,7 +798,6 @@
 
   function setImageArray(data, dtype){
 
-    console.log("f100", data.substring(0, 100));
     const raw = atob(data);
     const buffer = new ArrayBuffer(raw.length);
     const uint8View = new Uint8Array(buffer);
@@ -777,15 +834,16 @@
 
       setImageArray(data, dtype);
       
-      [height, width, channels] = shape || [];
+      [batch, height, width, channels] = shape || [];
+      batch = batch ?? 1;
       height = height ?? 1;
       width = width ?? 1;
       channels = channels ?? undefined;
-      if (!channels && imageDataArray.length % (height * width) != 0){
+      if (!channels && imageDataArray.length % (batch * height * width) != 0){
           vscode.postMessage({ command: 'showError', text: `error: 通道错误`});
           return;
       }
-      channels = !channels? Math.ceil(imageDataArray.length / (height * width)): channels;
+      channels = !channels? Math.ceil(imageDataArray.length / (batch * height * width)): channels;
         
       const blob = new Blob([document.querySelector('#worker-script').textContent], { type: 'application/javascript' });
       const worker = new Worker(URL.createObjectURL(blob));
@@ -807,6 +865,7 @@
       setShowValue('info-shape', [height, width, channels]);
       setShowValue('info-dtype', dtype);
       setShowValue('info-channel', 0 - (channels === 3 || channels === 4));
+      setShowValue('info-batch', currentBatch);
       populateChannelButtons(channels);
 
       drawImage();

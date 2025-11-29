@@ -3,7 +3,7 @@
   "displayName": "Image Data Visualizer",
   "description": "Visualize numpy/tensor/PIL or image file data directly in VS Code.",
   "publisher": "sunlin",
-  "version": "1.0.2",
+  "version": "1.1.2",
   "engines": {
     "vscode": "^1.75.0"
   },

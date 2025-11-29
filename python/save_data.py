@@ -22,7 +22,7 @@ def encode_base64(arr):
     raw_bytes = arr.tobytes()
     b64_str = base64.b64encode(raw_bytes).decode('utf-8')
     meta = {
-        "shape": arr.shape,
+        "shape": [1] * (4 - arr.ndim) + list(arr.shape),
         "dtype": str(arr.dtype)
     }
     meta_str = json.dumps(meta)
@@ -31,7 +31,7 @@ def encode_base64(arr):
 def save(expr, out_data_path, out_meta_path):
     try:
         arr = to_numpy(expr)
-        assert arr.ndim <= 3, f"Unsupported dim: the dims of data must be no more than 3, now is {arr.ndim}"
+        assert arr.ndim <= 4, f"Unsupported dim: the dims of data must be no more than 4, now is {arr.ndim}"
         encoded, meta_str = encode_base64(arr)
         with open(out_data_path, "w", encoding="utf-8") as f:
             f.write(encoded)

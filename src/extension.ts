@@ -112,7 +112,7 @@ export function activate(context: vscode.ExtensionContext) {
       }
       try {
         const res = await loadImageBuffer(filePath);
-        const meta = {dtype: "uint8", shape: [res.shape[0], res.shape[1], res.shape[2]]};
+        const meta = {dtype: "uint8", shape: [1, res.shape[0], res.shape[1], res.shape[2]]};
         const webview = openViewer(context, res.data.toString("base64"), path.basename(filePath), meta);
 
         const watcher = vscode.workspace.createFileSystemWatcher(
