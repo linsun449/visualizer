@@ -11,20 +11,20 @@ interface VariableDetail {
 
 export class WatchVariableItem extends vscode.TreeItem {
   constructor(
-    public readonly variableInfo: any,
+    public readonly variable: any,
     public readonly collapsibleState: vscode.TreeItemCollapsibleState,
     public readonly detail?: VariableDetail
   ) {
     const gradMark =
-      variableInfo?.type === "Tensor" && detail
+      variable?.type === "Tensor" && detail
         ? detail.grad === true
           ? "🔥"
           : "❄️"
         : "";
 
-    const label = variableInfo.isUserExpr
-      ? `${variableInfo.name}${gradMark}🔍️`
-      : variableInfo.name + gradMark;
+    const label = variable.isUserExpr
+      ? `${variable.name}${gradMark}🔍️`
+      : variable.name + gradMark;
 
     super(label, collapsibleState);
 
@@ -32,34 +32,34 @@ export class WatchVariableItem extends vscode.TreeItem {
     this.description = this.buildDescription();
     this.tooltip = this.buildTooltip();
 
-    this.contextValue = variableInfo.isUserExpr ? "userExpr" : "normalVar";
+    this.contextValue = variable.isUserExpr ? "userExpr" : "normalVar";
   }
 
   private buildDescription(): string {
     if (this.detail) {
-        const shape = this.detail.shape ? `shape=[${this.detail.shape}]` : "";
-        const dtype = this.detail.dtype ? `dtype=${this.detail.dtype}` : "";
+        const shape = this.detail.shape ? `[${this.detail.shape}]` : "";
+        const dtype = this.detail.dtype ? `'${this.detail.dtype}'` : "";
         const info = [shape, dtype].filter(Boolean).join(", ");
-        return ` =  ${this.variableInfo.type}${info ? `(${info})` : ""}: ${this.variableInfo.value}`;
+        return ` =  ${this.variable.type}${info ? `(${info})` : ""} 📣 ${this.variable.value}`;
     }
-    return WatchVariableItem.formatShort(this.variableInfo.value);
+    return WatchVariableItem.formatShort(this.variable.value);
   }
 
   private buildTooltip(): vscode.MarkdownString {
     const m = new vscode.MarkdownString(undefined, true);
     m.isTrusted = true;
 
-    let mainInfo = this.variableInfo.evaluateName || this.variableInfo.name;
+    let mainInfo = this.variable.evaluateName || this.variable.name;
     if (this.detail) {
         const shape = this.detail.shape ? `shape=[${this.detail.shape}]` : "";
         const dtype = this.detail.dtype ? `dtype=${this.detail.dtype}` : "";
         const info = [shape, dtype].filter(Boolean).join(", ");
-        mainInfo += ` = ${this.variableInfo.type}${info ? `(${info})` : ""}`;
+        mainInfo += ` = ${this.variable.type}${info ? `(${info})` : ""}`;
     }
     m.appendMarkdown(`### **${mainInfo}**\n\n`);
     const valueText =
-      this.variableInfo.value ??
-      WatchVariableItem.formatShort(this.variableInfo.value);
+      this.variable.value ??
+      WatchVariableItem.formatShort(this.variable.value);
 
     m.appendMarkdown(`**Value:**\n\`\`\`text\n${valueText}\n\`\`\`\n`);
 
@@ -82,7 +82,7 @@ export class WatchVariableItem extends vscode.TreeItem {
   }
 
   private resolveIcon(): vscode.ThemeIcon {
-    const v = this.variableInfo;
+    const v = this.variable;
     const device = v.device || this.detail?.device || "cpu";
 
     const color = device.toLowerCase().includes("cuda") || device.toLowerCase().includes("gpu");
@@ -90,29 +90,22 @@ export class WatchVariableItem extends vscode.TreeItem {
     const icon = (() => {
       switch (v.type) {
         case "Tensor": if (color) return "symbol-event";
-        case "ndarray":
-        case "array":
+        case "ndarray": case "array":
           return "symbol-variable";
-        case "int":
-        case "float":
-        case "number":
+        case "int": case "float": case "number":
           return "symbol-number";
-        case "str":
-        case "string":
+        case "str": case "string":
           return "symbol-string";
-        case "bool":
-        case "boolean":
+        case "bool": case "boolean":
           return "symbol-boolean";
         case "dict": return "symbol-object";
-        case "list": return "symbol-array";
-        case "object":
-        case "module":
-        case "class":
+        case "list": case "tuple":
+          return "symbol-array";
+        case "object": case "module": case "class":
           return "symbol-class";
         case "function":
           return "symbol-function";
-        case "null":
-        case "undefined":
+        case "null": case "undefined":
           return "warning";
       }
       if (typeof v.value === 'string' && v.value.includes("object") && v.value !== null) return "symbol-class";
@@ -247,10 +240,10 @@ export class WatchVariableProvider
   }
 
   getTreeItem(element: WatchVariableItem): vscode.TreeItem {
-    const detail = this.variableDetailsCache.get(element.variableInfo.evaluateName || element.variableInfo.name);
+    const detail = this.variableDetailsCache.get(element.variable.evaluateName || element.variable.name);
     if (detail) {
       return new WatchVariableItem(
-        element.variableInfo,
+        element.variable,
         element.collapsibleState,
         detail
       );
@@ -271,7 +264,7 @@ export class WatchVariableProvider
         })
       );
     }
-    const thenable = this.loadChildren(element.variableInfo);
+    const thenable = this.loadChildren(element.variable);
     return thenable
   }
 
@@ -331,7 +324,7 @@ export function showWatchVariable(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand(
       "watchVariables.removeExpression",
       (item: WatchVariableItem) => {
-        provider.removeExpression(item.variableInfo.evaluateName || item.variableInfo.name);
+        provider.removeExpression(item.variable.evaluateName || item.variable.name);
       }
     )
   );
